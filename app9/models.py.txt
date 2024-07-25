@@ -1,0 +1,25 @@
+from django.db import models
+from django.forms import ModelForm
+
+# Create your models here.
+class Student(models.Model):
+    name = models.CharField(max_length=100)
+    usn = models.CharField(max_length=10, unique=True)
+    sem = models.IntegerField()
+
+    def __str__(self):
+        return self.name
+    
+class Project(models.Model):
+    selected_std = models.ForeignKey(Student, on_delete=models.CASCADE)
+    topic = models.CharField(max_length=100)
+    duration_in_days = models.IntegerField()
+    languages_used = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.topic
+    
+class ProjectReg(ModelForm):
+    class Meta:
+        model = Project
+        fields = ['selected_std', 'topic', 'duration_in_days', 'languages_used']

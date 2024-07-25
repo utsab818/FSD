@@ -1,0 +1,14 @@
+<html>
+    <head>
+        <title>Student</title>
+    </head>
+    <body>
+        <ul>
+            {% for student in studentL %}
+                <li>
+                    <a href="{% url 'studentDetail' student.pk}">{{ student.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </body>
+</html>

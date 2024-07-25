@@ -1,0 +1,16 @@
+from django.shortcuts import render
+from django.http import HttpResponse
+from .models import ProjectReg
+
+# Create your views here.
+def addProject(request):
+    if request.method=="post":
+        form = ProjectReg(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponse("File saved")
+        return HttpResponse("File could not be saved")
+    
+    else:
+        form = ProjectReg()
+        return render(request, 'addProject.html', {'addProjectDetail': form})

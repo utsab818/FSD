@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <title>Student</title>
+    </head>
+    <body>
+        <form method="post">
+            {% csrf_token %}
+            {{ addProjectDetail.as_p }}
+            <table>
+                <tr>
+                    <td>
+                        <input type="submit" value="Add">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </body>
+</html>

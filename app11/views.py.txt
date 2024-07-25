@@ -1,0 +1,49 @@
+import csv
+from io import BytesIO
+from django.http import HttpResponse
+from django.shortcuts import render
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table
+
+from .models import Student,Course
+
+# Create your views here.
+def generateCSV(request):
+    students = Student.objects.all()
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="student.csv"'
+
+    csv_writer = csv.writer(response)
+    csv_writer.writerow(['Name', 'Email', 'Courses'])
+
+    for student in students:
+        courses = ", ".join([course.name for course in student.courses.all()])
+        csv_writer.writerow([student.name, student.email, courses])
+    
+    return response
+
+def generatePDF(request):
+    students = Student.objects.all()
+    data = ['Name', 'Email', 'Courses']
+
+    for student in students:
+        courses = ", ".join([course.name for course in student.courses.all()])
+        data.append([student.name, student.email, courses])
+
+    buffer = BytesIO()
+    pdf = SimpleDocTemplate(buffer, pagesize=letter)
+
+    table = Table(data)
+    elements = [table]
+
+    pdf.build(elements)
+
+    pdf_value = buffer.getvalue()
+    buffer.close()
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="example.pdf"'
+
+    response.write(pdf_value)
+    return response
